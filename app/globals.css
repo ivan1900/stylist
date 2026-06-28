@@ -1,2 +1,96 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
+/**
+ * @theme inline: genera utilidades que referencian las CSS vars directamente.
+ * Así bg-background = background-color: var(--background), lo que
+ * permite que el dark mode funcione solo cambiando la var en .dark {}.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
+
+  /* Inter cargada por Next.js via --font-inter */
+  --font-sans: var(--font-inter, "Inter", sans-serif);
+}
+
+/* Light mode */
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 84% 4.9%);
+
+  --brand-50: hsl(222 83% 98%);
+  --brand-100: hsl(222 83% 95%);
+  --brand-200: hsl(222 83% 90%);
+  --brand-300: hsl(225 83% 80%);
+  --brand-400: hsl(225 80% 65%);
+  --brand-500: hsl(225 75% 55%);
+  --brand-600: hsl(225 70% 45%);
+  --brand-700: hsl(225 70% 35%);
+  --brand-800: hsl(225 70% 25%);
+  --brand-900: hsl(225 70% 15%);
+  --brand-950: hsl(225 70% 10%);
+
+  --accent: hsl(346.8 77.2% 49.8%);
+  --accent-foreground: hsl(0 0% 100%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 84% 4.9%);
+
+  --muted: hsl(210 40% 96.1%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+
+  --border: hsl(214.3 31.8% 91.4%);
+}
+
+/* Dark mode */
+.dark {
+  --background: hsl(222.2 84% 4.9%);
+  --foreground: hsl(210 40% 98%);
+
+  --brand-50: hsl(222 70% 10%);
+  --brand-100: hsl(222 70% 15%);
+  --brand-200: hsl(225 70% 25%);
+  --brand-300: hsl(225 70% 35%);
+  --brand-400: hsl(320 80% 80%);
+  --brand-500: hsl(320 85% 70%);
+  --brand-600: hsl(320 90% 60%);
+  --brand-700: hsl(320 95% 50%);
+  --brand-800: hsl(320 100% 40%);
+  --brand-900: hsl(0 0% 100%);
+  --brand-950: hsl(0 0% 100%);
+
+  --accent: hsl(320 85% 70%);
+  --accent-foreground: hsl(222.2 84% 4.9%);
+
+  --card: hsl(222 47% 11%);
+  --card-foreground: hsl(210 40% 98%);
+
+  --muted: hsl(217.2 32.6% 17.5%);
+  --muted-foreground: hsl(215 20.2% 65.1%);
+
+  --border: hsl(217.2 32.6% 17.5%);
+}

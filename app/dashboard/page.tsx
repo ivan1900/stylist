@@ -1,16 +1,15 @@
 import { auth } from '@/auth';
-import { logout } from '@/app/server/login/actions';
+import AppBar from '@/app/components/AppBar';
 
 export default async function DashboardPage() {
   const session = await auth();
   return (
-    <main
-      style={{ maxWidth: 360, margin: '100px auto', fontFamily: 'sans-serif' }}>
-      <h1>Dashboard</h1>
-      <p>Welcome, {session?.user?.name ?? 'stranger'}!</p>
-      <form action={logout}>
-        <button type='submit'>Sign out</button>
-      </form>
-    </main>
+    <>
+      <AppBar />
+      <main className="max-w-md mx-auto my-24 font-sans">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p>Welcome, {session?.user?.name ?? 'stranger'}!</p>
+      </main>
+    </>
   );
 }
