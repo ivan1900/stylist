@@ -43,18 +43,18 @@ export default function CatalogUpload() {
   }
 
   return (
-    <section>
+    <section className='h-full border border-gray-200 rounded-2xl p-4 flex flex-col'>
       <div className='flex items-center justify-between mb-4'>
         <div>
           <h2 className='text-xl font-semibold'>Catálogo de ropa</h2>
-          <p className='text-sm text-default-500'>
+          <p className='text-sm text-slate-600'>
             Subí fotos de prendas para armar tu catálogo.
           </p>
         </div>
         <Button
-          variant='primary'
           isPending={uploading}
-          onPress={() => inputRef.current?.click()}>
+          onPress={() => inputRef.current?.click()}
+          className='bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold hover:shadow-lg transition-shadow'>
           Subir foto
         </Button>
       </div>
@@ -72,24 +72,18 @@ export default function CatalogUpload() {
       />
 
       {photos.length === 0 ? (
-        <Card>
-          <Card.Content className='flex items-center justify-center h-40 text-default-400 text-sm'>
-            Sin fotos aún. ¡Subí la primera prenda!
-          </Card.Content>
-        </Card>
+        <div className='flex-1 flex items-center justify-center text-slate-500 text-sm'>
+          Sin fotos aún. ¡Subí la primera prenda!
+        </div>
       ) : (
-        <div className='grid grid-cols-2 sm:grid-cols-3 gap-3'>
-          {photos.map((photo) => (
-            <div key={photo.id} className='relative group rounded-lg overflow-hidden border border-default-200'>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={photo.url}
-                alt='Prenda'
-                className='w-full aspect-square object-cover'
-              />
+        <div className='flex-1 overflow-y-auto flex flex-col gap-2'>
+          {photos.map((photo, i) => (
+            <div key={photo.id} className='flex items-center gap-3 rounded-lg border border-gray-200 p-2 group'>
+              <img src={photo.url} alt='Prenda' className='w-12 h-12 object-cover rounded-md shrink-0' />
+              <span className='flex-1 text-sm truncate text-slate-700'>Prenda {i + 1}</span>
               <button
                 onClick={() => handleDelete(photo.id)}
-                className='absolute top-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity'
+                className='text-slate-400 hover:text-danger opacity-0 group-hover:opacity-100 transition-opacity text-xs px-2 py-1'
                 aria-label='Eliminar foto'>
                 ✕
               </button>

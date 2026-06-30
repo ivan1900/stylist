@@ -3,21 +3,13 @@ import { logout } from '@/app/server/login/actions';
 
 export default function AppBar() {
   return (
-    <header
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1rem',
-        backgroundColor: '#f8f9fa',
-        borderBottom: '1px solid #dee2e6',
-      }}>
-      <div style={{ fontWeight: 'bold' }}>Stylist</div>
+    <header className='flex justify-between items-center px-4 py-4 bg-white border-b border-gray-200'>
+      <div className='font-bold text-slate-800'>Stylist</div>
       <form action={logout}>
         <Button
           type='submit'
           variant='ghost'
-          className='text-indigo-600 dark:text-pink-400 font-medium'>
+          className='text-slate-600 font-medium'>
           Sign out
         </Button>
       </form>
