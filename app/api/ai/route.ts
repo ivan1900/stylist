@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateText, generateImage } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { readFileSync } from 'fs';
-import { join, extname } from 'path';
+import path from 'path';
 
 // Vercel serverless: allow up to 60s for the two-step AI call
 export const maxDuration = 60;
@@ -15,10 +15,15 @@ const MIME_MAP: Record<string, string> = {
   '.gif': 'image/gif',
 };
 
+const PUBLIC_DIR = path.resolve(process.cwd(), 'public');
+
 function readImageAsBase64(relativeUrl: string): { base64: string; mimeType: string } {
-  const filePath = join(process.cwd(), 'public', relativeUrl);
+  const filePath = path.resolve(PUBLIC_DIR, relativeUrl);
+  if (!filePath.startsWith(PUBLIC_DIR + path.sep)) {
+    throw new Error('Invalid path');
+  }
   const buffer = readFileSync(filePath);
-  const mimeType = MIME_MAP[extname(relativeUrl).toLowerCase()] ?? 'image/jpeg';
+  const mimeType = MIME_MAP[path.extname(relativeUrl).toLowerCase()] ?? 'image/jpeg';
   return { base64: buffer.toString('base64'), mimeType };
 }
 
@@ -37,8 +42,14 @@ export async function POST(req: NextRequest) {
   }
 
   // --- Paso 1: GPT-4o Vision analiza el modelo y las prendas ---
-  const modelImg = readImageAsBase64(modelImageUrl);
-  const catalogImgs = catalogImageUrls.map(readImageAsBase64);
+  let modelImg: { base64: string; mimeType: string };
+  let catalogImgs: { base64: string; mimeType: string }[];
+  try {
+    modelImg = readImageAsBase64(modelImageUrl);
+    catalogImgs = catalogImageUrls.map(readImageAsBase64);
+  } catch {
+    return NextResponse.json({ error: 'Invalid path' }, { status: 400 });
+  }
 
   const { text: dallePrompt } = await generateText({
     model: openai('gpt-4o'),

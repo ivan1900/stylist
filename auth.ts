@@ -1,18 +1,32 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-
-// ponytail: hardcoded user — replace with a real DB lookup when you have one
-const USERS = [{ id: "1", name: "Admin", email: "admin@example.com", password: "password" }]
+import { timingSafeEqual } from "crypto"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: { email: { label: "Email" }, password: { label: "Password", type: "password" } },
       authorize({ email, password }) {
-        const user = USERS.find((u) => u.email === email && u.password === password)
-        return user ?? null
+        const adminEmail = process.env.ADMIN_EMAIL
+        const adminPassword = process.env.ADMIN_PASSWORD
+        const adminName = process.env.ADMIN_NAME ?? "Admin"
+
+        if (!adminEmail || !adminPassword || !email || !password) return null
+        if (email !== adminEmail) return null
+
+        const bufInput = Buffer.from(String(password))
+        const bufStored = Buffer.from(adminPassword)
+        if (bufInput.length !== bufStored.length) return null
+        if (!timingSafeEqual(bufInput, bufStored)) return null
+
+        return { id: "1", name: adminName, email: adminEmail }
       },
     }),
   ],
   pages: { signIn: "/login" },
 })
+
+// Required environment variables (add to .env):
+// ADMIN_EMAIL=admin@example.com
+// ADMIN_PASSWORD=your-secure-password
+// ADMIN_NAME=Admin   (optional, defaults to "Admin")

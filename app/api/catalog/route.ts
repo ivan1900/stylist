@@ -3,10 +3,14 @@ import { writeFile, mkdir, unlink } from 'fs/promises';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { getDb } from '@/lib/db';
+import { auth } from '@/auth';
 
 const CATALOG_DIR = path.join(process.cwd(), 'public', 'photos', 'catalog');
 
 export async function GET() {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const db = await getDb();
   const result = await db.query<{ id: number; filename: string }>(
     'SELECT id, filename FROM catalog_photos ORDER BY created_at DESC'
@@ -19,6 +23,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const form = await req.formData();
   const file = form.get('file') as File | null;
   if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 });
@@ -39,6 +46,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const id = req.nextUrl.searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 

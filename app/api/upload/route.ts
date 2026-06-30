@@ -3,10 +3,14 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { getDb } from '@/lib/db';
+import { auth } from '@/auth';
 
 const PHOTO_DIR = path.join(process.cwd(), 'public', 'photo');
 
 export async function GET() {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const db = await getDb();
   const result = await db.query<{ filename: string }>(
     'SELECT filename FROM model_photos ORDER BY created_at DESC LIMIT 1'
@@ -17,6 +21,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const form = await req.formData();
   const file = form.get('file') as File | null;
   if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 });
