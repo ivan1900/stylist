@@ -13,6 +13,11 @@ async function createDb(): Promise<PGlite> {
       filename TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS catalog_photos (
+      id SERIAL PRIMARY KEY,
+      filename TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
   `);
   return db;
 }
